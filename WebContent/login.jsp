@@ -12,7 +12,7 @@
 	<form action="#" method="post">
 		<table>
 			<tr>
-				<td>Nombre de usuario:</td>
+				<td>DNI:</td>
 				<td><input type="text" name="nombre"></td>
 			</tr>
 			<tr>
