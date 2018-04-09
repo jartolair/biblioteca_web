@@ -10,7 +10,33 @@ public class Usuario {
 	private int edad;
 	private String dni;
 	private Date fecha_nac;
+	private String password;
+	private String rol;
 	
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	/**
+	 * @return the rol
+	 */
+	public String getRol() {
+		return rol;
+	}
+	/**
+	 * @param rol the rol to set
+	 */
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
 	private ArrayList<Prestamo> prestamos;
 	
 	
