@@ -26,9 +26,21 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 	crossorigin="anonymous"></script>
-
+<link rel="stylesheet" href="../css/style.css" type="text/css">
 </head>
 <body>
+<div id="userDiv">
+	<%
+	Object u=session.getAttribute("usuario");
+	if (u!=null){
+		Usuario usuario=(Usuario) u;
+		out.print(usuario.getDni());
+		%><br><a href="../logout.jsp">Cerrar sesion</a><%
+	}else{
+		response.sendRedirect("../login.jsp");
+	}
+	%>
+	</div>
 	<h1>Usuarios</h1>
 	<table  class="table table-striped">
 		<thead>
@@ -59,6 +71,6 @@
 			%>
 	</tbody>
 	</table>
-	<a href="usuarios.html">Atras</a>
+	<a href="usuarios.jsp">Atras</a>
 </body>
 </html>

@@ -216,4 +216,29 @@ public class UsuarioModelo extends Conector{
 		
 		return (usuario);
 	}
+	
+	public Usuario selectDniPassword(String dni, String password){
+		Usuario usuario=null;
+		try {
+			PreparedStatement pst=conexion.prepareStatement("select * from usuarios where dni=? and pass=?");
+			pst.setString(1, dni);
+			pst.setString(2, password);
+			ResultSet rst=pst.executeQuery();
+			if(rst.next()){
+				usuario=new Usuario();
+				usuario.setId(rst.getInt("id"));
+				usuario.setNombre(rst.getString("nombre"));
+				usuario.setApellido(rst.getString("apellido"));
+				usuario.setEdad(rst.getInt("edad"));
+				usuario.setDni(rst.getString("dni"));
+				usuario.setFecha_nac(rst.getDate("fecha_nac"));
+				usuario.setRol(rst.getString("rol"));
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return usuario;
+	}
 }

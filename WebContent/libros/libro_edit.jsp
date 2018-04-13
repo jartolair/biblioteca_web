@@ -1,5 +1,6 @@
 <%@page import="modelo.Libro"%>
 <%@page import="modelo.LibroModelo"%>
+<%@page import="modelo.Usuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
@@ -8,6 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -15,6 +17,21 @@
 
 </head>
 <body>
+<div id="userDiv">
+	<%
+	Object u=session.getAttribute("usuario");
+	if (u!=null){
+		Usuario usuario=(Usuario) u;
+		if (!usuario.getRol().equals("admin")){
+			response.sendRedirect("../login.jsp");
+		}
+		out.print(usuario.getDni());
+		%><br><a href="../logout.jsp">Cerrar sesion</a><%
+	}else{
+		response.sendRedirect("../login.jsp");
+	}
+	%>
+	</div>
 <h1>Editar libro</h1>
     <%
     if (request.getParameter("idLibro")==null){

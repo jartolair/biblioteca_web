@@ -7,6 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<%
+session.removeAttribute("usuario");
+response.sendRedirect("biblioteca.jsp");
+%>
 </body>
 </html>

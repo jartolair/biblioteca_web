@@ -1,10 +1,4 @@
-table{
-	margin: 20px;
-}
-td{
-	padding:10px;
-}
-th{
-	padding:4px;
-	background-color:#bfbfbf;
+#userDiv{
+	float:right;
+	text-align:right;
 }

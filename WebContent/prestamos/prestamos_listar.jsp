@@ -2,6 +2,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="modelo.Prestamo"%>
+<%@page import="modelo.Usuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
@@ -26,6 +27,18 @@
 </style>
 </head>
 <body>
+<div id="userDiv">
+	<%
+	Object u=session.getAttribute("usuario");
+	if (u!=null){
+		Usuario usuario=(Usuario) u;
+		out.print(usuario.getDni());
+		%><br><a href="../logout.jsp">Cerrar sesion</a><%
+	}else{
+		response.sendRedirect("../login.jsp");
+	}
+	%>
+	</div>
 <h1>Prestamos</h1>
 <table  class="table table-striped">
 	<thead>
@@ -63,6 +76,6 @@
 	%>
 </tbody>
 </table>
-<a href="prestamos.html">Atras</a>
+<a href="prestamos.jsp">Atras</a>
 </body>
 </html>

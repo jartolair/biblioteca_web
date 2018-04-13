@@ -136,6 +136,33 @@ public class PrestamoModelo extends Conector{
 		
 		return true;
 	}
+
+	public Prestamo crearPrestamo(Libro libro, Usuario usuario) {
+		// TODO Auto-generated method stub
+		Prestamo prestamo=new Prestamo();
+		prestamo.setLibro(libro);
+		prestamo.setUsuario(usuario);
+		java.util.Date fechaDeHoy=new java.util.Date();
+		prestamo.setFechaPrestamo(fechaDeHoy);
+		Date fechaLimite = new Date(fechaDeHoy.getTime() + ((1000 * 60 * 60 * 24) * 7 *3));
+		prestamo.setFechaLimite(fechaLimite);
+		prestamo.setEntregado(false);
+		return prestamo;
+	}
 	
-	
+	public boolean loTieneEsteUsuario(Libro libro,Usuario usuario){
+		try {
+			PreparedStatement pst=this.conexion.prepareStatement("Select * from prestamos where id_libro=? and id_usuario=? and entregado=false");
+			pst.setInt(1, libro.getId());
+			pst.setInt(2, usuario.getId());
+			ResultSet rst=pst.executeQuery();
+			if(rst.next()){
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

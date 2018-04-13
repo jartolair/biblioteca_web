@@ -86,5 +86,9 @@ public class Prestamo {
 	}
 	
 	
-	
+	public int diasRestantes(){
+		Date fechaDeHoy=new Date();
+		int dias=(int) ((this.getFechaLimite().getTime()-fechaDeHoy.getTime())/86400000);
+		return dias;
+	}
 }
