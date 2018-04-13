@@ -29,13 +29,15 @@
 <body>
 <div id="userDiv">
 	<%
+	Usuario usuario=null;
 	Object u=session.getAttribute("usuario");
-	if (u!=null){
-		Usuario usuario=(Usuario) u;
-		out.print(usuario.getDni());
-		%><br><a href="../logout.jsp">Cerrar sesion</a><%
-	}else{
+	if (u==null){
 		response.sendRedirect("../login.jsp");
+	}else{
+		usuario=(Usuario) u;
+		if (!usuario.getRol().equals("admin")){
+			response.sendRedirect("../login.jsp");
+		}
 	}
 	%>
 	</div>
