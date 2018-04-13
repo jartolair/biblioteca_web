@@ -1,8 +1,10 @@
 <%@page import="comparador.ComparatorTituloAsc"%>
 <%@page import="modelo.PrestamoModelo"%>
+<%@page import="modelo.Prestamo"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="modelo.Libro"%>
+<%@page import="modelo.Usuario"%>
 <%@page import="modelo.LibroModelo"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -24,10 +26,38 @@
 	.no_disponible{
 		background-color:red;
 	}
+	.lo_tiene{
+		background-color:grey;
+	}
+	.color_verde{
+		color: green;
+	}
+	.color_amarillo{
+		color: #FFC600;
+	}
+	.color_naranja{
+		color: #FF4C00;
+	}
+	.color_rojo{
+		color:red;
+	}
 </style>
 </head>
 <body>
 <h1>Libros</h1>
+	<div id="userDiv">
+	<%
+	Usuario usuario=null;
+	Object u=session.getAttribute("usuario");
+	if (u!=null){
+		usuario=(Usuario) u;
+		out.print(usuario.getDni());
+		%><br><a href="../logout.jsp">Cerrar sesion</a><%
+	}else{
+		%><a href="../login.jsp">Iniciar sesion</a><%
+	}
+	%>
+	</div>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -35,6 +65,7 @@
 	      <th scope="col"><a href='#?order=EscritoAsc'>Escritor</a></th>
  
 		<th scope="col">Estado</th>    
+      <th scope="col">Fecha limite</th>
       <th scope="col">Opciones</th>
 
     </tr> 
@@ -50,26 +81,49 @@
 	while (i.hasNext()){
 		Libro libro=i.next();
 		out.print("<tr>");
-		out.print("<td>"+libro.getTitulo()+"</td>");
-		out.print("<td>"+libro.getAutor()+"</td>");
-		if (prestamoModelo.estaDisponible(libro)){
-			out.print("<td class='disponible'>Disponible</td>");
-		}else{
-			out.print("<td class='no_disponible'>No disponible</td>");
-		}
-		out.print("<td>");
-			if(request.getParameter("admin")!=null){
-				out.print("<a href='libro_infor.jsp?idLibro="+libro.getId()+"'>Ver</a> / ");
-				out.print("<a href='libro_del.jsp?idLibro="+libro.getId()+"'>Borrar</a> / ");
-				out.print("<a href='libro_edit.jsp?idLibro="+libro.getId()+"'>Editar</a>");
+			out.print("<td>"+libro.getTitulo()+"</td>");
+			out.print("<td>"+libro.getAutor()+"</td>");
+			if (prestamoModelo.estaDisponible(libro)){
+				out.print("<td class='disponible'>Disponible</td>");
+			}else if(usuario!=null && prestamoModelo.loTieneEsteUsuario(libro,usuario)){
+				out.print("<td class='lo_tiene'>Ya lo tienes</td>");
 			}else{
-				out.print("<a href='libro_infor.jsp?idLibro="+libro.getId()+"'>Ver</a> ");
-				if (prestamoModelo.estaDisponible(libro)){
-					out.print("/ <a href='libro_infor.jsp?idLibro="+libro.getId()+"'>Realizar prestamo</a>  ");
-				}
-				
+				out.print("<td class='no_disponible'>No disponible</td>");
 			}
-		out.print("</td>");
+			
+			if(usuario!=null && prestamoModelo.loTieneEsteUsuario(libro,usuario)){
+				Prestamo prestamo=prestamoModelo.selectPorLibroUsuarioEntrega(libro, usuario, false);
+				int diasRestantes=prestamo.diasRestantes();
+				out.print("<td>");
+				out.print(prestamo.getFechaLimite());
+				if(diasRestantes>7*2){
+					out.print("<b class=color_verde>");
+				}else if(diasRestantes>7*1){
+					out.print("<b class='color_amarillo'>");
+				}else if(diasRestantes>0){
+					out.print("<b class='color_naranja'>");
+				}else{
+					out.print("<b class='color_rojo'>");
+				}
+				out.print("(te quedan "+diasRestantes+" dias)</b></td>");
+			}else{
+				out.print("<td></td>");
+			}
+			
+			out.print("<td>");
+			out.print("<a href='libro_infor.jsp?idLibro="+libro.getId()+"'>Ver</a> ");
+				if(usuario==null||!usuario.getRol().equals("admin")){
+					if (prestamoModelo.estaDisponible(libro)){
+						out.print("/ <a href='realizar_prestamo.jsp?idLibro="+libro.getId()+"'>Realizar prestamo</a>  ");
+					}
+					
+				}else{
+					out.print("/ <a href='libro_del.jsp?idLibro="+libro.getId()+"'>Borrar</a> / ");
+					out.print("<a href='libro_edit.jsp?idLibro="+libro.getId()+"'>Editar</a>");
+					
+				}
+			out.print("</td>");
+			
 		out.print("</tr>");
 	}
 	
@@ -78,15 +132,13 @@
   </tbody>
 </table>
 <%
-if(request.getParameter("admin")!=null){
+if(usuario!=null && usuario.getRol().equals("admin")){
 	out.print("<a href='libros_listar.jsp'>Vista usuario</a> / ");
 	out.print("<a href='crear_libro.jsp'>Añadir libro</a>");
-}else{
-	out.print("<a href='libros_listar.jsp?admin=1'>Vista administrador</a>");
 }
 %>
 <br/>
-<a href="libros.html">Atras</a>
+<a href="libros.jsp">Atras</a>
 
 </body>
 </html>
